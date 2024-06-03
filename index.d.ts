@@ -16,7 +16,7 @@ declare const gameList: {
     HAGO: { id: number, price: number, gameId: number, gvtId: number },
 }
 
-export declare interface CodashopResponse {
+declare interface CodashopResponse {
     initCallBackendAPI: boolean;
     orderId: string;
     errorCode: string;
@@ -57,6 +57,12 @@ export declare interface CodashopResponse {
     txnId: string;
 }
 
+export declare interface GameResponse {
+    success: boolean
+    message?: string
+    data?: { username: string; game: keyof typeof gameList } | CodashopResponse,
+    codaResponse?: CodashopResponse
+}
 export declare interface Role {
     server_id: number;
     server: string;
@@ -84,5 +90,5 @@ export declare class Codashop {
 
     public static get games(): typeof gameList
 
-    public static request(game: keyof typeof gameList, userId: string, zoneId?: string): Promise<CodashopResponse>
+    public static request(game: keyof typeof gameList, userId: string, zoneId?: string): Promise<GameResponse>
 }

@@ -48,7 +48,7 @@ class Codashop {
 
     static async request(game, userId, zoneId) {
 
-        const request = await axios.post('https://order-sg.codashop.com/initPayment.action', this.postData({
+        const req = await axios.post('https://order-sg.codashop.com/initPayment.action', this.postData({
             gameId: this.games[game].gameId,
             gvtId: this.games[game].gvtId,
             id: this.games[game].id,
@@ -67,7 +67,38 @@ class Codashop {
             }
         })
 
-        return request.data
+        if (req.data.success) {
+            const response1 = JSON.parse(decodeURIComponent(req.data.result))?.username
+            const response2 = JSON.parse(decodeURIComponent(req.data.result))?.roles
+
+            let finalResponse = { username: '', game: game.replaceAll('_', ' ') }
+            if (response1 !== undefined || response1 === null) {
+                finalResponse.username = decodeURI(response1).replaceAll('+', ' ')
+            } else if (response2.length !== 0) {
+                finalResponse.username = decodeURI(response2[0].role).replaceAll('+', ' ')
+            } else {
+                finalResponse.username = ''
+            }
+            return ({
+                success: true,
+                data: finalResponse,
+                codaResponse: req.data
+            })
+        } else {
+            let message = req.errorMsg
+            if (req.RESULT_CODE === 10001) {
+                message = "Terlalu banyak aksi, Silahkan coba lagi setelah 5 detik"
+            } else {
+                message = req.errorMsg
+            }
+
+            if (!req.errorMsg) message = "Permintaan tidak valid"
+            return ({
+                success: false,
+                message,
+                data: req.data
+            })
+        }
     }
 }
-module.exports = { Codashop, gameList }
+module.exports = { Codashop }
