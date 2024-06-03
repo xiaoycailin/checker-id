@@ -1,56 +1,6 @@
-import axios from "axios";
-export interface CodashopResponse {
-    initCallBackendAPI: boolean;
-    orderId: string;
-    errorCode: string;
-    confirmation: boolean;
-    isUserConfirmation: boolean;
-    errorMsg: string;
-    paymentChannel: string;
-    result: string;
-    channelPrice: string;
-    confirmationFields: {
-        zipCode: string;
-        country: string;
-        totalPrice: string;
-        create_role_country: string;
-        userIdAndZoneId: string;
-        userId: string;
-        productName: string;
-        paymentChannel: string;
-        this_login_country: string;
-        channelPrice: string;
-        price: string;
-        zoneId: string;
-        verifiedMsisdn: string;
-        priceBeforeTax: string;
-        taxAmount: string;
-        email: string;
-        inputRoleId: string;
-        username: string;
-    };
-    success: boolean;
-    denom: string;
-    user: {
-        userId: string;
-        zoneId: string;
-    };
-    RESULT_CODE: number;
-    isThirdPartyMerchant: boolean;
-    txnId: string;
-}
+const axios = require("axios")
 
-export interface Role {
-    server_id: number;
-    server: string;
-    role_id: number;
-    client_type: number;
-    role: string;
-    player_id: string;
-    packed_role_id: number;
-}
-
-const gameList = {
+export const gameList = {
     AOV: { id: 270229, price: 5000000.0, gameId: 0, gvtId: 0 },
     CALL_OF_DUTY: { id: 46221, price: 500000.0, gameId: 73, gvtId: 90 },
     FREEFIRE: { id: 20500, price: 1000.0, gameId: 17, gvtId: 33 },
@@ -59,28 +9,17 @@ const gameList = {
     WILD_RIFT: { id: 372111, price: 360000.0, gameId: 0, gvtId: 0 },
     NETEASE_LIFEAFTER: { id: 45768, price: 424000.0, gameId: 0, gvtId: 0 },
     LIGHT_OF_THEL
-    : { id: 62560, price: 299000.0, gameId: 0, gvtId: 0 },
+        : { id: 62560, price: 299000.0, gameId: 0, gvtId: 0 },
     MOBILE_LEGENDS: { id: 20355, price: 24254.0, gameId: 0, gvtId: 19 },
     SUPER_SUS: { id: 266144, price: 210000.0, gameId: 0, gvtId: 0 },
     VALORANT: { id: 75194, price: 250000.0, gameId: 0, gvtId: 0 },
     ZULONG_DRAGON_RAJA: { id: 75574, price: 15000.0, gameId: 108, gvtId: 138 },
     HAGO: { id: 20762, price: 1950.0, gameId: 33, gvtId: 43 },
 }
-export interface GameFace {
-    id: string | number;
-    price: string | number;
-    gameId: string | number;
-    gvtId: string | number;
-    userData?: {
-        userId: string;
-        zoneId?: string;
-        gameKey: keyof typeof gameList;
-    };
-    [key: string]: any;
-}
-export class Codashop {
 
-    private static postData(game: GameFace) {
+class Codashop {
+
+    static postData(game) {
         return {
             'voucherPricePoint.id': game.id,
             'voucherPricePoint.price': game.price,
@@ -101,13 +40,13 @@ export class Codashop {
             'impactClickId': '',
             'anonymousId': ''
         }
-    }   
+    }
 
-    public static get games() {
+    static get games() {
         return gameList
     }
 
-    public static async request(game: keyof typeof gameList, userId: string, zoneId?: string) {
+    static async request(game, userId, zoneId) {
 
         const request = await axios.post('https://order-sg.codashop.com/initPayment.action', this.postData({
             gameId: this.games[game].gameId,
@@ -128,7 +67,7 @@ export class Codashop {
             }
         })
 
-        return request.data as CodashopResponse
+        return request.data
     }
 }
-
+module.exports = { Codashop }
