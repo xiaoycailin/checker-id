@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-export const gameList = {
+const gameList = {
     AOV: { id: 270229, price: 5000000.0, gameId: 0, gvtId: 0 },
     CALL_OF_DUTY: { id: 46221, price: 500000.0, gameId: 73, gvtId: 90 },
     FREEFIRE: { id: 20500, price: 1000.0, gameId: 17, gvtId: 33 },
@@ -70,4 +70,4 @@ class Codashop {
         return request.data
     }
 }
-module.exports = { Codashop }
+module.exports = { Codashop, gameList }
