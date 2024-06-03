@@ -1,10 +1,9 @@
 {
-  "name": "id-checker",
-  "version": "1.0.0",
+  "name": "checker-id",
+  "version": "1.2.0",
   "private": false,
   "scripts": {},
   "dependencies": {
-    "axios": "^1.7.2",
-    "id-checker": "^1.0.0"
+    "axios": "^1.7.2"
   }
 }
